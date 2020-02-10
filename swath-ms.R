@@ -1,4 +1,4 @@
-# 6-2-2020 JHZ
+# 10-2-2020 JHZ
 
 # module load python/3.6
 # source $HOME/.conda/tensorflow-gpu/bin/activate
@@ -12,6 +12,16 @@ Caprion <- paste(Sys.getenv("INF"),"Caprion",sep="/")
 setwd(Caprion)
 load("caprion.rda")
 setwd(cwd)
+
+# Outliers by AE
+r <- ae_swath(prot,hidden.layers=c(100,40,60))
+idr <- cbind(swath_protein[c("Internal.ID","External.ID")],mse=rowSums(r)/ncol(prot))
+ord <- with(idr, order(mse,decreasing=TRUE))
+subset(idr[ord,],mse>0.016)
+outliers <- rownames(prot)%in%with(subset(idr,mse>0.016),External.ID)
+pdf("ae.pdf")
+plot(idr[ord,3],cex=0.4)
+dev.off()
 
 library(gap)
 
@@ -41,16 +51,6 @@ boxplot(ssdf,xaxt="n",cex=0.2)
 axis(side=1, at=xtick, tick=FALSE, labels=FALSE)
 text(x=xtick, par("usr")[3], labels = colnames(ssdf), srt=90, pos=1, xpd = TRUE, cex=0.25)
 title("mean-centred and scaled data")
-dev.off()
-
-# Outliers by AE
-r <- ae_swath(prot,hidden.layers=c(100,20,30))
-idr <- cbind(swath_protein[c("Internal.ID","External.ID")],mse=rowSums(r)/ncol(prot))
-ord <- with(idr, order(mse,decreasing=TRUE))
-subset(idr[ord,],mse>0.025)
-outliers <- rownames(prot)%in%with(subset(idr,mse>0.025),External.ID)
-pdf("ae.pdf")
-plot(idr[ord,3],cex=0.4)
 dev.off()
 
 # UMAP
