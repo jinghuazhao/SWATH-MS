@@ -19,7 +19,8 @@ r <- ae_swath(prot,hidden.layers=c(800,150,400))
 idr <- cbind(swath_protein[c("Internal.ID","External.ID")],mse=rowSums(r)/ncol(prot))
 ord <- with(idr, order(mse,decreasing=TRUE))
 print(subset(idr[ord,],mse>mse_threshold),row.names=FALSE)
-outliers <- rownames(prot)%in%with(subset(idr,mse>mse_threshold),External.ID)
+excl <- with(subset(idr,mse>mse_threshold),External.ID)
+outliers <- rownames(prot)%in%excl
 pdf("ae.pdf")
 plot(idr[ord,3],cex=0.4)
 dev.off()
@@ -81,12 +82,11 @@ dev.off()
 # RLE plot
 pdf("rle.pdf", width=50, height=12)
 par(mfrow=c(2,1))
-group <- rep(1,ncol(prot))
-group <- 1
-group[outliers] <- 2
-col.group=c("black","red")
-makeRLEplot(prot, log2.data=FALSE, groups=group, col.group=col.group, cex=0.3, showTitle=TRUE)
-makeRLEplot(prot, log2.data=FALSE, cex=0.3, showTitle=TRUE, title="Uncoloured relative log expression (RLE) plot")
+groups <- rep(1,nrow(prot))
+groups[outliers] <- 2
+col.groups=c("black","red")
+makeRLEplot(t(prot), log2.data=FALSE, groups=groups, col.group=col.groups, cex=0.3, showTitle=TRUE)
+makeRLEplot(t(prot), log2.data=FALSE, cex=0.3, showTitle=TRUE, title="Uncoloured relative log expression (RLE) plot")
 dev.off()
 
 # cluster analysis
