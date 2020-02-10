@@ -14,11 +14,12 @@ load("caprion.rda")
 setwd(cwd)
 
 # Outliers by AE
-r <- ae_swath(prot,hidden.layers=c(200,80,120))
+mse_threshold <- 0.0006
+r <- ae_swath(prot,hidden.layers=c(800,150,400))
 idr <- cbind(swath_protein[c("Internal.ID","External.ID")],mse=rowSums(r)/ncol(prot))
 ord <- with(idr, order(mse,decreasing=TRUE))
-subset(idr[ord,],mse>0.0065)
-outliers <- rownames(prot)%in%with(subset(idr,mse>0.0065),External.ID)
+print(subset(idr[ord,],mse>mse_threshold),row.names=FALSE)
+outliers <- rownames(prot)%in%with(subset(idr,mse>mse_threshold),External.ID)
 pdf("ae.pdf")
 plot(idr[ord,3],cex=0.4)
 dev.off()
@@ -70,7 +71,7 @@ screeplot(ppc, npcs=20, type="lines", main="PCA screeplot")
 with(ppc, {
   plot(x[,1:2], main="PC1 -- PC2", cex=0.5, pch=21)
   points(x[outliers,1:2],cex=0.5,pch=21,col="red")
-  legend("bottom", legend = c("rms>0.0065", "other"), box.lty = 0, cex = 0.8,
+  legend("bottom", legend = c(paste("rms >", mse_threshold), "other"), box.lty = 0, cex = 0.8,
          col = c("red", "black"), horiz = TRUE, inset = c(0, 1), xpd = TRUE, pch = c(10, 16))
 })
 biplot(ppc,cex=0.1)
