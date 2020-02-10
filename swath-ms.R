@@ -70,7 +70,7 @@ screeplot(ppc, npcs=20, type="lines", main="PCA screeplot")
 with(ppc, {
   plot(x[,1:2], main="PC1 -- PC2", cex=0.5, pch=21)
   points(x[outliers,1:2],cex=0.5,pch=21,col="red")
-  legend("bottom", legend = c("rms>0.015", "other"), box.lty = 0, cex = 0.8,
+  legend("bottom", legend = c("rms>0.0065", "other"), box.lty = 0, cex = 0.8,
          col = c("red", "black"), horiz = TRUE, inset = c(0, 1), xpd = TRUE, pch = c(10, 16))
 })
 biplot(ppc,cex=0.1)
