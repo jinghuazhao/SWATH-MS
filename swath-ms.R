@@ -1,19 +1,22 @@
-# 10-2-2020 JHZ
+# 18-2-2020 JHZ
 
+cwd <- getwd()
+Caprion <- paste(Sys.getenv("INF"),"Caprion",sep="/")
+setwd(Caprion)
+source("caprion.ini")
+setwd(cwd)
+source("swath-ms.ini")
+swath_ms_data()
+load("swath-ms.rda")
+swath_overlap()
+load("swath-ms-overlap.rda")
+prot <- swath_protein[,-(1:2)]
+
+# Outliers by AE
 # module load python/3.6
 # source $HOME/.conda/tensorflow-gpu/bin/activate
 # protein data
 
-cwd <- getwd()
-source("swath-ms.ini")
-load("swath-ms.rda")
-prot <- swath_protein[,-(1:2)]
-Caprion <- paste(Sys.getenv("INF"),"Caprion",sep="/")
-setwd(Caprion)
-load("caprion.rda")
-setwd(cwd)
-
-# Outliers by AE
 mse_threshold <- 0.0006
 r <- ae_swath(prot,hidden.layers=c(800,150,400))
 idr <- cbind(swath_protein[c("Internal.ID","External.ID")],mse=rowSums(r)/ncol(prot))
@@ -100,18 +103,24 @@ plot(mc, what = "BIC")
 dev.off()
 
 # correlation
-with(pheno_protein,cor(crp,CRP,use="complete.obs"))
-with(pheno_protein,cor(transf,TRFE,use="complete.obs"))
+CRP_TRFE <- swath_protein[c("Internal.ID","P02741","P02787")]
+names(CRP_TRFE)[2:3] <- c("CRP","TRFE")
+j <- merge(swath_pheno,CRP_TRFE,by.x="swathMS_id",by.y="Internal.ID")
+with(j,cor(CRP_bl,CRP,use="complete.obs"))
+with(j,cor(TRANSF_bl,TRFE,use="complete.obs"))
+jj <- merge(j,pheno_protein,by="caprion_id")
+with(jj,cor(CRP.x,CRP.y))
+with(jj,cor(TRFE.x,TRFE.y))
 
 # regression
-attach(pheno_protein)
+pheno_protein <- merge(swath_pheno,swath_protein,by.x="swathMS_id",by.y="Internal.ID")
+df <- pheno_protein[,-(1:16)]
 options(width=500)
 cat("protein","intercept","sex",sep="\t",file="sex.tsv")
 cat("\n",append=TRUE,file="sex.tsv")
 cat("protein","intercept","sex","age","bmi",sep="\t",file="lm.tsv")
 cat("\n",append=TRUE,file="lm.tsv")
 sapply(seq(1, ncol(df)), regfun)
-detach(pheno_protein)
 pdf("qq.pdf")
 sex <- read.delim("sex.tsv",as.is=TRUE)
 gap::qqunif(with(sex,sex),cex=0.4)
@@ -123,22 +132,11 @@ dev.off()
 
 # genetics and phenotypes for association analysis
 
-affymetrix()
-names(Samples) <- c("caprion_id","external_id","comment")
-phenotypes <- read.delim("interval_caprion_pilot_samples_phenotype_data.tsv",as.is=TRUE)
-phenotypes <- within(phenotypes,{
-  age <- agepulse
-  sex <- sexpulse
-  bmi <- wt_bl/ht_bl/ht_bl
-  crp <- crp_bl
-  transf <- transf_bl
-})
-pd <- merge(phenotypes[c("caprion_id","affymetrix_gwasqc_bl","sex","age","bmi","crp","transf")],Samples,by="caprion_id")
-
-id1_id2_0 <- read.table("interval.samples",skip=2,col.names=c("ID_1","ID_2","missing"))
-missing <- read.table("merged_imputation.missing",col.names=c("affymetrix_gwasqc_bl","missing"))
+id1_id2_0 <- read.table(paste(Caprion,"interval.samples",sep="/"),skip=2,col.names=c("ID_1","ID_2","missing"))
+missing <- read.table(paste(Caprion,"merged_imputation.missing",sep="/"),col.names=c("affymetrix_gwasqc_bl","missing"))
 id1_id2_missing <- merge(id1_id2_0[,-3],missing,by.x="ID_1",by.y="affymetrix_gwasqc_bl")
-eigenvec <- read.delim("merged_imputation.eigenvec")
-covariates <- merge(pheno_protein[c("affymetrix_gwasqc_bl","sex","age","bmi")],eigenvec[,-1],
-                    by.x="affymetrix_gwasqc_bl",by.y="IID")
-id1_id2_missing_covariates <- merge(id1_id2_missing,covariates,by.x="ID_1",by.y="affymetrix_gwasqc_bl")
+eigenvec <- read.delim(paste(Caprion,"merged_imputation.eigenvec",sep="/"))
+covariates <- merge(pheno_protein[c("Affymetrix_gwasQC_bl","sex","age","bmi")],eigenvec[,-1],
+                    by.x="Affymetrix_gwasQC_bl",by.y="IID")
+id1_id2_missing_covariates <- merge(id1_id2_missing,covariates,by.x="ID_1",by.y="Affymetrix_gwasQC_bl")
+affymetrix()
