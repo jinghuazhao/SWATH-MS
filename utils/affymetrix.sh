@@ -1,10 +1,20 @@
-# 18-2-2020 JHZ
+# 19-2-2020 JHZ
 
+# Caprion
 export uniprot=(P12318 P12318 P05362 Q6P179 P0DJI8 P04004 O75347 P51888 P35247)
 export protein=(FCGR2A FCGR2A ICAM1 ERAP2 SAA1 VTN TBCA PRELP SFTPD)
 export rsid=(rs1801274 rs148396952 rs5498 rs2927608 rs35179000 rs704 rs429358 rs1138545 rs62143206)
 export snpid=(1:161479745 1:161569951 19:10395683 5:96252432 11:18290903 17:26694861 19:45411941 9:117835899 19:54326212)
+# SWATH-MS
+export uniprot=(O75347 P04004 P0DJI8 Q6P179)
+export protein=(TBCA VTN SAA1 ERAP2)
+export rsid=(rs429358 rs704 rs35179000 rs2927608)
+export snpid=(19:45411941 17:26694861 11:18290903 5:96252432)
 export mi=merged_imputation
+export Caprion=$INF/Caprion
+export interval=/rds/project/jmmh2/rds-jmmh2-post_qc_data/interval/imputed/uk10k_1000g_b37/imputed
+
+module load plink/2.00-alpha
 
 function samples()
 {
@@ -13,23 +23,25 @@ function samples()
     echo 0 0 0
     cut -d' ' -f1-3 ${mi}.fam
   ) > ${mi}.sample
-  qctool -g ${mi}.bed -s ${mi}.sample -sample-stats -osample ${mi}.sample-stats
+  qctool -g $Caprion/${mi}.bed -s $Caprion/${mi}.sample -sample-stats -osample ${mi}.sample-stats
   awk 'NR>10 && !/success/' ${mi}.sample-stats | cut -f1,3 > ${mi}.missing
-  plink2 --bfile merged_imputation --pca 20 --threads 4 --out merged_imputation
-  cut -d' ' -f1,2 SomaLogic.sample | \
+  plink2 --bfile $Caprion/merged_imputation --pca 20 --threads 4 --out merged_imputation
+  cut -d' ' -f1,2 $interval/interval.samples | \
   sed '1,2d' | \
   grep -v -f affymetrix.id - > affymetrix.id2
 }
 
 function bgen_gen()
 {
-  for i in `seq 0 8`
+  for i in `seq 0 3`
   do
     export chr=$(awk -v snpid=${snpid[i]} 'BEGIN{split(snpid,chrpos,":");print chrpos[1]}')
     echo ${rsid[i]} > ${rsid[i]}
-    qctool -g impute_${chr}_interval.bgen -s SomaLogic.sample -incl-rsids ${rsid[i]} -incl-samples affymetrix.id -ofiletype bgen_v1.1 -og ${rsid[i]}.bgen
+    qctool -g $interval/impute_${chr}_interval.bgen -s $interval/interval.samples \
+           -incl-rsids ${rsid[i]} -incl-samples affymetrix.id -ofiletype bgen_v1.1 -og ${rsid[i]}.bgen
     bgenix -g ${rsid[i]}.bgen -index -clobber
-    qctool -g impute_${chr}_interval.bgen -s SomaLogic.sample -incl-rsids ${rsid[i]} -incl-samples affymetrix.id -ofiletype gen -og ${rsid[i]}.gen
+    qctool -g $interval/impute_${chr}_interval.bgen -s $interval/interval.samples -incl-rsids ${rsid[i]} \
+           -incl-samples affymetrix.id -ofiletype gen -og ${rsid[i]}.gen
     ( head -2 SomaLogic.sample; sed '1,2d' SomaLogic.sample | grep -v "NA NA NA" ) > ${rsid[i]}.sample
   done
 }
@@ -75,7 +87,7 @@ function assoc_snptest()
           -o ${uniprot[i]}_invn-${rsid[i]}.out
 }
 
-for i in `seq 0 8`
+for i in `seq 0 3`
 do
   assoc_bolt
   assoc_snptest
