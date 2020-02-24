@@ -1,4 +1,4 @@
-# 18-2-2020 JHZ
+# 24-2-2020 JHZ
 
 cwd <- getwd()
 Caprion <- paste(Sys.getenv("INF"),"Caprion",sep="/")
@@ -6,7 +6,6 @@ setwd(Caprion)
 source("caprion.ini")
 setwd(cwd)
 source("swath-ms.ini")
-swath_ms_data()
 load("swath-ms.rda")
 swath_overlap()
 load("swath-ms-overlap.rda")
@@ -131,12 +130,5 @@ title("QQ plot for BMI")
 dev.off()
 
 # genetics and phenotypes for association analysis
-
-id1_id2_0 <- read.table(paste(Caprion,"interval.samples",sep="/"),skip=2,col.names=c("ID_1","ID_2","missing"))
-missing <- read.table(paste(Caprion,"merged_imputation.missing",sep="/"),col.names=c("affymetrix_gwasqc_bl","missing"))
-id1_id2_missing <- merge(id1_id2_0[,-3],missing,by.x="ID_1",by.y="affymetrix_gwasqc_bl")
-eigenvec <- read.delim(paste(Caprion,"merged_imputation.eigenvec",sep="/"))
-covariates <- merge(pheno_protein[c("Affymetrix_gwasQC_bl","sex","age","bmi")],eigenvec[,-1],
-                    by.x="Affymetrix_gwasQC_bl",by.y="IID")
-id1_id2_missing_covariates <- merge(id1_id2_missing,covariates,by.x="ID_1",by.y="Affymetrix_gwasQC_bl")
 affymetrix()
+affymetrix(select="pgwas")
