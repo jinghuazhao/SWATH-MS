@@ -86,12 +86,12 @@ function pgwas_plink2()
   do
       plink2 \
              --bgen $interval/impute_${i}_interval.bgen --sample swath-ms.sample \
-             --glm --maf 0.001 --input-missing-phenotype -9 \
+             --glm --input-missing-phenotype -9 \
              --pheno swath-ms.pheno --pheno-name ${col} --covar swath-ms.covar --keep swath-ms.id \
              -out ${col}-${i}
       plink2 \
              --bgen $interval/impute_${i}_interval.bgen --sample swath-ms.sample \
-             --glm --maf 0.001 --input-missing-phenotype -9 \
+             --glm --input-missing-phenotype -9 \
              --pheno swath-ms.pheno --pheno-name ${col}_invn --covar swath-ms.covar --keep swath-ms.id \
              --out ${col}_invn-${i}
   done
