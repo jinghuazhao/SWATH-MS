@@ -1,61 +1,21 @@
-# 19-2-2020 JHZ
+# 24-2-2020 JHZ
 
-# Caprion
-export uniprot=(P12318 P12318 P05362 Q6P179 P0DJI8 P04004 O75347 P51888 P35247)
-export protein=(FCGR2A FCGR2A ICAM1 ERAP2 SAA1 VTN TBCA PRELP SFTPD)
-export rsid=(rs1801274 rs148396952 rs5498 rs2927608 rs35179000 rs704 rs429358 rs1138545 rs62143206)
-export snpid=(1:161479745 1:161569951 19:10395683 5:96252432 11:18290903 17:26694861 19:45411941 9:117835899 19:54326212)
-# SWATH-MS
-export uniprot=(O75347 P04004 P0DJI8 Q6P179)
-export protein=(TBCA VTN SAA1 ERAP2)
-export rsid=(rs429358 rs704 rs35179000 rs2927608)
-export snpid=(19:45411941 17:26694861 11:18290903 5:96252432)
-export mi=merged_imputation
 export Caprion=$INF/Caprion
 export interval=/rds/project/jmmh2/rds-jmmh2-post_qc_data/interval/imputed/uk10k_1000g_b37/imputed
 
-module load plink/2.00-alpha
-
-function samples()
+function pgwas_bolt()
 {
-  (
-    echo ID_1 ID_2 missing
-    echo 0 0 0
-    cut -d' ' -f1-3 ${mi}.fam
-  ) > ${mi}.sample
-  qctool -g $Caprion/${mi}.bed -s $Caprion/${mi}.sample -sample-stats -osample ${mi}.sample-stats
-  awk 'NR>10 && !/success/' ${mi}.sample-stats | cut -f1,3 > ${mi}.missing
-  plink2 --bfile $Caprion/merged_imputation --pca 20 --threads 4 --out merged_imputation
-  cut -d' ' -f1,2 $interval/interval.samples | \
-  sed '1,2d' | \
-  grep -v -f affymetrix.id - > affymetrix.id2
-}
-
-function bgen_gen()
-{
-  for i in `seq 0 3`
-  do
-    export chr=$(awk -v snpid=${snpid[i]} 'BEGIN{split(snpid,chrpos,":");print chrpos[1]}')
-    echo ${rsid[i]} > ${rsid[i]}
-    qctool -g $interval/impute_${chr}_interval.bgen -s $interval/interval.samples \
-           -incl-rsids ${rsid[i]} -incl-samples affymetrix.id -ofiletype bgen_v1.1 -og ${rsid[i]}.bgen
-    bgenix -g ${rsid[i]}.bgen -index -clobber
-    qctool -g $interval/impute_${chr}_interval.bgen -s $interval/interval.samples -incl-rsids ${rsid[i]} \
-           -incl-samples affymetrix.id -ofiletype gen -og ${rsid[i]}.gen
-    ( head -2 SomaLogic.sample; sed '1,2d' SomaLogic.sample | grep -v "NA NA NA" ) > ${rsid[i]}.sample
-  done
-}
-
-function assoc_bolt()
-{
+  export col=$(cut -d' ' -f $i swath-ms.uniprot)
   bolt \
-      --bfile=${mi} \
+      --bfile=merged_imputation \
       --remove=affymetrix.id2 \
-      --bgenFile=${rsid[i]}.bgen \
-      --sampleFile=${rsid[i]}.sample \
-      --phenoFile=SomaLogic.sample \
-      --phenoCol=${uniprot[i]} \
-      --covarFile=SomaLogic.sample \
+      --bgenFile=$interval/impute_{1:22}_interval.bgen \
+      --bgenMinMAF=1e-3 \
+      --bgenMinINFO=0.3 \
+      --sampleFile=swath-ms.sample \
+      --phenoFile=swath-ms.sample \
+      --phenoCol=$col \
+      --covarFile=swath-ms.sample \
       --covarCol=sex \
       --qCovarCol=age \
       --qCovarCol=bmi \
@@ -64,34 +24,53 @@ function assoc_bolt()
       --LDscoresUseChip \
       --noMapCheck \
       --numLeaveOutChunks 2 \
-      --statsFileBgenSnps=${uniprot[i]}-${rsid[i]}.bgen-stats \
-      --statsFile=${uniprot[i]}-${rsid[i]}.stats \
-      2>&1 | tee ${uniprot[i]}-${rsid[i]}-bolt.log
+      --statsFileBgenSnps=${col}.bgen-stats \
+      --statsFile=${col}.stats \
+      2>&1 | tee ${col}-bolt.log
+  bolt \
+      --bfile=merged_imputation \
+      --remove=affymetrix.id2 \
+      --bgenFile=$interval/impute_{1:22}_interval.bgen \
+      --bgenMinMAF=1e-3 \
+      --bgenMinINFO=0.3 \
+      --sampleFile=swath-ms.sample \
+      --phenoFile=swath-ms.sample \
+      --phenoCol=${col}_invn \
+      --covarFile=swath-ms.sample \
+      --covarCol=sex \
+      --qCovarCol=age \
+      --qCovarCol=bmi \
+      --qCovarCol=PC{1:20} \
+      --lmm \
+      --LDscoresUseChip \
+      --noMapCheck \
+      --numLeaveOutChunks 2 \
+      --statsFileBgenSnps=${col}_invn.bgen-stats \
+      --statsFile=${col}.stats \
+      2>&1 | tee ${col}_invn-bolt.log
 }
 
-function assoc_snptest()
+function pgwas_snptest()
 {
+  export col=$(cut -d' ' -f $i swath-ms.uniprot)
   snptest \
-          -data ${rsid[i]}.bgen ${rsid[i]}.sample -log ${uniprot[i]}-${rsid[i]}-snptest.log -cov_all \
+          -data ${rsid[i]}.bgen swath-ms.sample -log ${col}-snptest.log -cov_all \
           -filetype bgen \
           -frequentist 1 -hwe -missing_code NA,-999 -use_raw_covariates -use_raw_phenotypes \
           -method score \
-          -pheno ${uniprot[i]} -printids \
-          -o ${uniprot[i]}-${rsid[i]}.out
+          -pheno ${col} -printids \
+          -o ${col}.out
   snptest \
-          -data ${rsid[i]}.bgen ${rsid[i]}.sample -log ${uniprot[i]}_invn-${rsid[i]}-snptest.log -cov_all \
+          -data ${rsid[i]}.bgen swath-ms.sample -log ${col}_invn-snptest.log -cov_all \
           -filetype bgen \
           -frequentist 1 -hwe -missing_code NA,-999 -use_raw_covariates -use_raw_phenotypes \
           -method score \
-          -pheno ${uniprot[i]}_invn -printids \
-          -o ${uniprot[i]}_invn-${rsid[i]}.out
+          -pheno ${col}_invn -printids \
+          -o ${col}_invn.out
 }
 
-for i in `seq 0 3`
-do
-  assoc_bolt
-  assoc_snptest
-done
+for i in `seq 1 3`; do pgwas_bolt; done
+
 (
   cat *out | head -19 | sed 's/allele//g;s/frequentist_//g' | tail -n 1 | awk -v OFS="\t" '{print "uniprot", "protein", $0}'
   for i in `seq 0 3`
