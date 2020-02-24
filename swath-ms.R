@@ -7,6 +7,7 @@ source("caprion.ini")
 setwd(cwd)
 source("swath-ms.ini")
 load("swath-ms.rda")
+
 swath_overlap()
 load("swath-ms-overlap.rda")
 prot <- swath_protein[,-(1:2)]
