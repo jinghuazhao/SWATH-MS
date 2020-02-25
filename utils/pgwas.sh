@@ -1,103 +1,10 @@
 # 25-2-2020 JHZ
 
-export Caprion=$INF/Caprion
-export interval=/rds/project/jmmh2/rds-jmmh2-post_qc_data/interval/imputed/uk10k_1000g_b37/imputed
+source utils/pgwas.ini
 
-sed 's/ID_1/FID/;s/ID_2/IID/' swath-ms.sample > swath-ms-bolt.sample
-plink --bfile merged_imputation --remove affymetrix.id2 --make-bed --out swath-ms
+# initialize
 
-function pgwas_bolt()
-{
-  export col=$(cut -d' ' -f $i swath-ms.uniprot)
-  bolt \
-      --bfile=swath-ms \
-      --bgenFile=swath-ms-{1:22}.bgen \
-      --bgenMinMAF=1e-2 \
-      --bgenMinINFO=0.3 \
-      --sampleFile=swath-ms.sample \
-      --phenoFile=swath-ms-bolt.sample \
-      --phenoCol=$col \
-      --covarFile=swath-ms-bolt.sample \
-      --covarCol=sex \
-      --qCovarCol=age \
-      --qCovarCol=bmi \
-      --qCovarCol=PC{1:20} \
-      --lmm \
-      --LDscoresUseChip \
-      --noMapCheck \
-      --numLeaveOutChunks 2 \
-      --statsFileBgenSnps=${col}.bgen-stats \
-      --statsFile=${col}.stats \
-      2>&1 | tee ${col}-bolt.log
-  bolt \
-      --bfile=swath-ms \
-      --bgenFile=swath-ms-{1:22}.bgen \
-      --bgenMinMAF=1e-2 \
-      --bgenMinINFO=0.3 \
-      --sampleFile=swath-ms.sample \
-      --phenoFile=swath-ms-bolt.sample \
-      --phenoCol=${col}_invn \
-      --covarFile=swath-ms-bolt.sample \
-      --covarCol=sex \
-      --qCovarCol=age \
-      --qCovarCol=bmi \
-      --qCovarCol=PC{1:20} \
-      --lmm \
-      --LDscoresUseChip \
-      --noMapCheck \
-      --numLeaveOutChunks 2 \
-      --statsFileBgenSnps=${col}_invn.bgen-stats \
-      --statsFile=${col}.stats \
-      2>&1 | tee ${col}_invn-bolt.log
-}
-
-function pgwas_snptest()
-{
-  export col=$(cut -d' ' -f $i swath-ms.uniprot)
-  for i in $(seq 1 22)
-  do
-      snptest \
-             -data swath-ms-${i}.bgen swath-ms.sample -log ${col}-snptest.log -cov_all \
-             -filetype bgen \
-             -frequentist 1 -hwe -missing_code NA,-999 -use_raw_covariates -use_raw_phenotypes \
-             -method score \
-             -pheno ${col} \
-             -o ${col}-${i}.out
-      snptest \
-             -data swath-ms-${i}.bgen swath-ms.sample -log ${col}_invn-snptest.log -cov_all \
-             -filetype bgen \
-             -frequentist 1 -hwe -missing_code NA,-999 -use_raw_covariates -use_raw_phenotypes \
-             -method score \
-             -pheno ${col}_invn \
-             -o ${col}_invn-${i}.out
-  done
-}
-
-sed '1,2d' swath-ms.sample | cut -d' ' -f1-2,4-26 > swath-ms.covar
-sed '2d' swath-ms.sample | cut -d' ' -f1-2,27-1244 | sed 's/ID_1/FID/;s/ID_2/IID/;s/NA/-9/g' > swath-ms.pheno
-paste  affymetrix.id affymetrix.id -d ' ' > swath-ms.id
-
-module load plink/2.00-alpha
-
-function pgwas_plink2()
-{
-  export col=$(cut -d' ' -f $i swath-ms.uniprot)
-  for i in $(seq 1 22)
-  do
-      plink2 \
-             --bgen swath-ms-${i}.bgen --sample swath-ms.sample \
-             --glm hide-covar --input-missing-phenotype -9 --covar-variance-standardize \
-             --pheno swath-ms.pheno --pheno-name ${col} --covar swath-ms.covar \
-             -out ${col}-${i}
-      plink2 \
-             --bgen swath-ms-${i}.bgen --sample swath-ms.sample \
-             --glm hide-covar --input-missing-phenotype -9 --covar-variance-standardize \
-             --pheno swath-ms.pheno --pheno-name ${col}_invn --covar swath-ms.covar \
-             --out ${col}_invn-${i}
-  done
-}
-
-for i in `seq 1 3`; do pgwas_plink2; done
+for i in `seq 1 3`; do pgwas_quicktest; done
 
 (
   cat *out | head -19 | sed 's/allele//g;s/frequentist_//g' | tail -n 1 | awk -v OFS="\t" '{print "uniprot", "protein", $0}'
