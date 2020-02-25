@@ -1,4 +1,4 @@
-# 24-2-2020 JHZ
+# 25-2-2020 JHZ
 
 cwd <- getwd()
 Caprion <- paste(Sys.getenv("INF"),"Caprion",sep="/")
@@ -7,6 +7,10 @@ source("caprion.ini")
 setwd(cwd)
 source("swath-ms.ini")
 load("swath-ms.rda")
+
+# genetics and phenotypes for association analysis
+affymetrix(select="pgwas")
+affymetrix()
 
 swath_overlap()
 load("swath-ms-overlap.rda")
@@ -129,7 +133,3 @@ lm <- read.delim("lm.tsv",as.is=TRUE)
 gap::qqunif(with(lm,bmi),cex=0.4)
 title("QQ plot for BMI")
 dev.off()
-
-# genetics and phenotypes for association analysis
-affymetrix()
-affymetrix(select="pgwas")
