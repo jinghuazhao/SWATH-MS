@@ -1,12 +1,15 @@
 # SWATH-MS work
 
-* [qctool.sh](utils/qctool.sh) attempts to extract genotype/sample information into a single .bgen file but is too slow.
+* [qctool.sh](utils/qctool.sh) attempts to extract genotype/sample information into a single .bgen file gives way to [qctool.sb](utils/qctool.sb) for its speed.
 * [swath-ms.ini](swath-ms.ini) and [swath-ms.R](swath-ms.R) perform data proceessing.
 * [affymetrix.sh](utils/affymetrix.sh) performs the association analysis on specific protein-variant combinations.
-* [pgwas.sh](utils/pgwas.sh) conducts genomewide associations analyses on all proteins.
+* [pgwas.sh](utils/pgwas.sh) conducts genomewide associations analyses on all proteins. Note that
   * BOLT-LMM took 24hr for one protein from all data (N=43,059) but failed to run on available genotypes and samples (N=196). It also uses 8-bit version of bgen (qctool -bgen-bits 8 and also the master genotype files).
+  * PLINK2 is reasonable.
   * SNPTEST gives verbose screen output with -printids.
-  * QUICKTEST is faster than SNPTEST.
+  * QUICKTEST is faster than SNPTEST and takes into account uncertainty.
+
+QUICKTEST is therefore the chosen software.
 
 ## URLs
 
