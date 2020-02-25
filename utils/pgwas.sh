@@ -1,4 +1,4 @@
-# 24-2-2020 JHZ
+# 25-2-2020 JHZ
 
 export Caprion=$INF/Caprion
 export interval=/rds/project/jmmh2/rds-jmmh2-post_qc_data/interval/imputed/uk10k_1000g_b37/imputed
@@ -13,8 +13,7 @@ function pgwas_bolt()
   export col=$(cut -d' ' -f $i swath-ms.uniprot)
   bolt \
       --bfile=merged_imputation \
-      --remove=affymetrix.id2 \
-      --bgenFile=$interval/impute_{1:22}_interval.bgen \
+      --bgenFile=swath-ms-{1:22}.bgen \
       --bgenMinMAF=1e-3 \
       --bgenMinINFO=0.3 \
       --sampleFile=swath-ms.sample \
@@ -34,8 +33,7 @@ function pgwas_bolt()
       2>&1 | tee ${col}-bolt.log
   bolt \
       --bfile=merged_imputation \
-      --remove=affymetrix.id2 \
-      --bgenFile=$interval/impute_{1:22}_interval.bgen \
+      --bgenFile=swath-ms-{1:22}.bgen \
       --bgenMinMAF=1e-3 \
       --bgenMinINFO=0.3 \
       --sampleFile=swath-ms.sample \
@@ -61,14 +59,14 @@ function pgwas_snptest()
   for i in $(seq 1 22)
   do
       snptest \
-             -data $interval/impute_${i}_interval.bgen swath-ms.sample -log ${col}-snptest.log -cov_all \
+             -data swath-ms-${i}.bgen swath-ms.sample -log ${col}-snptest.log -cov_all \
              -filetype bgen \
              -frequentist 1 -hwe -missing_code NA,-999 -use_raw_covariates -use_raw_phenotypes \
              -method score \
              -pheno ${col} -printids \
              -o ${col}-${i}.out
       snptest \
-             -data $interval/impute_${i}_interval.bgen swath-ms.sample -log ${col}_invn-snptest.log -cov_all \
+             -data swath-ms-${i}.bgen swath-ms.sample -log ${col}_invn-snptest.log -cov_all \
              -filetype bgen \
              -frequentist 1 -hwe -missing_code NA,-999 -use_raw_covariates -use_raw_phenotypes \
              -method score \
@@ -85,14 +83,14 @@ function pgwas_plink2()
   for i in $(seq 1 22)
   do
       plink2 \
-             --bgen $interval/impute_${i}_interval.bgen --sample swath-ms.sample \
+             --bgen swath-ms-${i}.bgen --sample swath-ms.sample \
              --glm --input-missing-phenotype -9 \
-             --pheno swath-ms.pheno --pheno-name ${col} --covar swath-ms.covar --keep swath-ms.id \
+             --pheno swath-ms.pheno --pheno-name ${col} --covar swath-ms.covar \
              -out ${col}-${i}
       plink2 \
-             --bgen $interval/impute_${i}_interval.bgen --sample swath-ms.sample \
+             --bgen swath-ms-${i}.bgen --sample swath-ms.sample \
              --glm --input-missing-phenotype -9 \
-             --pheno swath-ms.pheno --pheno-name ${col}_invn --covar swath-ms.covar --keep swath-ms.id \
+             --pheno swath-ms.pheno --pheno-name ${col}_invn --covar swath-ms.covar \
              --out ${col}_invn-${i}
   done
 }
