@@ -6,8 +6,8 @@
 #SBATCH --time=6:00:00
 #SBATCH --cpus-per-task=8
 #SBATCH --array=1-22
-#SBATCH --output=qctool_%A_%a.out
-#SBATCH --error=qctool_%A_%a.err
+#SBATCH --output=$HPC_WORK/qctool_%A_%a.out
+#SBATCH --error=$HPC_WORK/qctool_%A_%a.err
 #SBATCH --export ALL
 
 export chr=${SLURM_ARRAY_TASK_ID}
@@ -17,4 +17,4 @@ export TMPDIR=/rds/user/$USER/hpc-work/
 echo ${p}
 
 qctool -g $interval/impute_${chr}_interval.bgen -s $interval/interval.samples -incl-samples affymetrix.id \
-       -og swath-ms-${chr}.bgen -os swath-ms-${chr}.samples
+       -og swath-ms-${chr}.bgen -os swath-ms-${chr}.samples -bgen-bits 8

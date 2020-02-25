@@ -4,19 +4,17 @@ export Caprion=$INF/Caprion
 export interval=/rds/project/jmmh2/rds-jmmh2-post_qc_data/interval/imputed/uk10k_1000g_b37/imputed
 
 sed 's/ID_1/FID/;s/ID_2/IID/' swath-ms.sample > swath-ms-bolt.sample
-sed '1,2d' swath-ms.sample | cut -d' ' -f12,4-26 > swath-ms.covar
-sed '2d' swath-ms.sample | cut -d' ' -f1-2,27-1244 | sed 's/ID_1/FID/;s/ID_2/IID/;s/NA/-9/g' > swath-ms.pheno
-paste  affymetrix.id affymetrix.id -d ' ' > swath-ms.id
+plink --bfile merged_imputation --remove affymetrix.id2 --make-bed --out swath-ms
 
 function pgwas_bolt()
 {
   export col=$(cut -d' ' -f $i swath-ms.uniprot)
   bolt \
-      --bfile=merged_imputation \
+      --bfile=swath-ms \
       --bgenFile=swath-ms-{1:22}.bgen \
-      --bgenMinMAF=1e-3 \
+      --bgenMinMAF=1e-2 \
       --bgenMinINFO=0.3 \
-      --sampleFile=swath-ms.sample \
+      --sampleFile=$interval/ \
       --phenoFile=swath-ms-bolt.sample \
       --phenoCol=$col \
       --covarFile=swath-ms-bolt.sample \
@@ -32,9 +30,9 @@ function pgwas_bolt()
       --statsFile=${col}.stats \
       2>&1 | tee ${col}-bolt.log
   bolt \
-      --bfile=merged_imputation \
+      --bfile=swath-ms \
       --bgenFile=swath-ms-{1:22}.bgen \
-      --bgenMinMAF=1e-3 \
+      --bgenMinMAF=1e-2 \
       --bgenMinINFO=0.3 \
       --sampleFile=swath-ms.sample \
       --phenoFile=swath-ms-bolt.sample \
@@ -75,6 +73,10 @@ function pgwas_snptest()
   done
 }
 
+sed '1,2d' swath-ms.sample | cut -d' ' -f1-2,4-26 > swath-ms.covar
+sed '2d' swath-ms.sample | cut -d' ' -f1-2,27-1244 | sed 's/ID_1/FID/;s/ID_2/IID/;s/NA/-9/g' > swath-ms.pheno
+paste  affymetrix.id affymetrix.id -d ' ' > swath-ms.id
+
 module load plink/2.00-alpha
 
 function pgwas_plink2()
@@ -84,12 +86,12 @@ function pgwas_plink2()
   do
       plink2 \
              --bgen swath-ms-${i}.bgen --sample swath-ms.sample \
-             --glm --input-missing-phenotype -9 \
+             --glm hide-covar --input-missing-phenotype -9 --covar-variance-standardize \
              --pheno swath-ms.pheno --pheno-name ${col} --covar swath-ms.covar \
              -out ${col}-${i}
       plink2 \
              --bgen swath-ms-${i}.bgen --sample swath-ms.sample \
-             --glm --input-missing-phenotype -9 \
+             --glm hide-covar --input-missing-phenotype -9 --covar-variance-standardize \
              --pheno swath-ms.pheno --pheno-name ${col}_invn --covar swath-ms.covar \
              --out ${col}_invn-${i}
   done
