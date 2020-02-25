@@ -4,6 +4,9 @@
 * [swath-ms.ini](swath-ms.ini) and [swath-ms.R](swath-ms.R) perform data proceessing.
 * [affymetrix.sh](utils/affymetrix.sh) performs the association analysis on specific protein-variant combinations.
 * [pgwas.sh](utils/pgwas.sh) conducts genomewide associations analyses on all proteins.
+  * BOLT-LMM took 24hr for one protein from all data (N=43,059) but failed to run on available genotypes and samples (N=196).
+  * SNPTEST gives verbose screen output with -printids
+  * QUICKTEST is an unclear option.
 
 ## URLs
 
