@@ -14,7 +14,7 @@ function pgwas_bolt()
       --bgenFile=swath-ms-{1:22}.bgen \
       --bgenMinMAF=1e-2 \
       --bgenMinINFO=0.3 \
-      --sampleFile=$interval/ \
+      --sampleFile=swath-ms.sample \
       --phenoFile=swath-ms-bolt.sample \
       --phenoCol=$col \
       --covarFile=swath-ms-bolt.sample \
@@ -61,14 +61,14 @@ function pgwas_snptest()
              -filetype bgen \
              -frequentist 1 -hwe -missing_code NA,-999 -use_raw_covariates -use_raw_phenotypes \
              -method score \
-             -pheno ${col} -printids \
+             -pheno ${col} \
              -o ${col}-${i}.out
       snptest \
              -data swath-ms-${i}.bgen swath-ms.sample -log ${col}_invn-snptest.log -cov_all \
              -filetype bgen \
              -frequentist 1 -hwe -missing_code NA,-999 -use_raw_covariates -use_raw_phenotypes \
              -method score \
-             -pheno ${col}_invn -printids \
+             -pheno ${col}_invn \
              -o ${col}_invn-${i}.out
   done
 }
