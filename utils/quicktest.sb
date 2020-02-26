@@ -22,9 +22,9 @@ do
               --ncovar PC6 --ncovar PC7 --ncovar PC8 --ncovar PC9 --ncovar PC10 \
               --ncovar PC11 --ncovar PC12 --ncovar PC13 --ncovar PC14 --ncovar PC15  \
               --ncovar PC16 --ncovar PC17 --ncovar PC18 --ncovar PC19 --ncovar PC20 \
-              --method-mean --method-score --compute-rSqHat --out work/${col}-qt-${chr}.out
+              --method-mean --method-score --compute-rSqHat --out work/${col}-qt-${chr}
 
-    grep -v NA work/${col}-qt-${chr}.out | \
-    gzip -f > quicktest/${col}-qt-${chr}.out.gz
-    rm work/${col}-qt-${chr}.out
+    grep -v NA work/${col}-qt-${chr} | \
+    gzip -f > quicktest/${col}-qt-${chr}.gz
+    rm work/${col}-qt-${chr}
 done
