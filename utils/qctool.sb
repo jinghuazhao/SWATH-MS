@@ -18,3 +18,4 @@ echo ${p}
 
 qctool -g $interval/impute_${chr}_interval.bgen -s $interval/interval.samples -incl-samples affymetrix.id \
        -og swath-ms-${chr}.bgen -os swath-ms-${chr}.samples -bgen-bits 8
+bgenix -g swath-ms-${chr}.bgen -index -clobber
