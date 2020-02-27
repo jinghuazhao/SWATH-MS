@@ -5,7 +5,7 @@
 #SBATCH --job-name=quicktest
 #SBATCH --time=12:00:00
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=128800
+#SBATCH --mem=16000
 #SBATCH --array=1-609
 #SBATCH --output=work/quicktest_%A_%a.out
 #SBATCH --error=work/quicktest_%A_%a.err
