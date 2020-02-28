@@ -8,6 +8,9 @@
     * PLINK2 is reasonable.
     * SNPTEST gives verbose screen output with -printids.
     * QUICKTEST is faster than SNPTEST and takes into account uncertainty.
+  * [utils/plink2.sb](utils/plink2.sb) is SLURM version on available genotypes and samples; it uses genotypes in bgen format nevertheless slow.
+  * [utils/plink2.sh](utils/plink2.sh) eventually uses genotypes with an MAF cutoff 0.1.
+* [swath-ms.ipynb](swath-ms.ipynb) is a Jupyter notebook calling tensorQTL.
 
 QUICKTEST is therefore the chosen software.
 
