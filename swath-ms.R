@@ -1,4 +1,4 @@
-# 25-2-2020 JHZ
+# 28-2-2020 JHZ
 
 cwd <- getwd()
 Caprion <- paste(Sys.getenv("INF"),"Caprion",sep="/")
@@ -9,8 +9,8 @@ source("swath-ms.ini")
 load("swath-ms.rda")
 
 # genetics and phenotypes for association analysis
-affymetrix(select="pgwas")
-affymetrix()
+affymetrix("SomaLogic")
+affymetrix("pgwas")
 
 swath_overlap()
 load("swath-ms-overlap.rda")
