@@ -4,6 +4,7 @@ export TMPDIR=/rds/user/$USER/hpc-work/
 
 module load plink/2.00-alpha
 
+plink --bfile swath-ms.bgen --maf 0.01 --make-bed --out swath-ms.01
 awk '{$1=$2};1' swath-ms.01.fam > swath-ms.fam
 seq 609 | \
 parallel -C' ' '

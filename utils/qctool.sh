@@ -5,4 +5,3 @@ qctool -g $interval/impute_#_interval.bgen -s $interval/interval.samples -incl-s
        -og swath-ms.bgen -os swath-ms.samples
 
 qctool -g swath-ms-#.bgen -s swath-ms.sample -ofiletype binary_ped -og swath-ms.bgen
-plink --bfile swath-ms.bgen --maf 0.01 --make-bed --out swath-ms.01
