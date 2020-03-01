@@ -6,6 +6,7 @@ setwd(Caprion)
 source("caprion.ini")
 setwd(cwd)
 source("swath-ms.ini")
+swath_ms_data()
 load("swath-ms.rda")
 
 # genetics and phenotypes for association analysis
