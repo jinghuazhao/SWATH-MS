@@ -11,7 +11,8 @@
   * [utils/quicktest.sb](utils/quicktest.sb) is SLURM version of QUICKTEST.
   * [utils/plink2.sb](utils/plink2.sb) is SLURM version on available genotypes and samples; it uses genotypes in bgen format nevertheless slow.
   * [utils/plink2.sh](utils/plink2.sh) eventually uses genotypes with an MAF cutoff 0.1.
-* [swath-ms.ipynb](swath-ms.ipynb) is a Jupyter notebook calling tensorQTL.
+  * [utils/check.R](utils/check.R) attempts to check for consistence with Caprion.
+* [swath-ms.ipynb](swath-ms.ipynb) is a Jupyter notebook calling tensorQTL -- it is not entirely ready due to missing information.
 
 ## URLs
 
