@@ -9,8 +9,8 @@ function pgz()
   sed 's|plink2/||g;s/-plink2//g;s/.gz//g' | \
   parallel -j3 -C' ' '
   (
-  # zcat plink2/{}.gz | head -1
-    zcat plink2/{}.gz | awk "
+  # zcat plink2/{}-plink2.gz | head -1
+    zcat plink2/{}-plink2.gz | awk "
     function abs(x)
     {
       if (x<0) return -x;
