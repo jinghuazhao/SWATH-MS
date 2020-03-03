@@ -7,10 +7,6 @@
   * [utils/plink2.sb](utils/plink2.sb) is SLURM version of PLINK2.
   * [utils/plink2.sh](utils/plink2.sh) non-SLURM version of PLINK2.
   * [utils/check.R](utils/check.R) attempts to check for consistence with Caprion.
-* [swath-ms.ipynb](swath-ms.ipynb) is a Jupyter notebook calling tensorQTL -- it is not entirely ready due to missing information.
-
-Therefore with the eventual option of pilot samples plut genotypes with an MAF cutoff 0.01, SLURM may or may not be needed.
-
 * Earlier scripts involve
   * [utils/affymetrix.sh](utils/affymetrix.sh) performs the association analysis on specific protein-variant combinations.
   * [utils/pgwas.sh](utils/pgwas.sh) ([utils/pgwas.ini](utils/pgwas.ini)) conducts genomewide associations analyses on all proteins. Note that
@@ -18,6 +14,9 @@ Therefore with the eventual option of pilot samples plut genotypes with an MAF c
     * PLINK2 is attractive with its speed.
     * QUICKTEST is faster than SNPTEST and takes into account uncertainty, and is therefore more preferable.
     * SNPTEST gives verbose screen output with -printids.
+* [swath-ms.ipynb](swath-ms.ipynb) is a Jupyter notebook calling tensorQTL -- it is not entirely ready due to missing information.
+
+Therefore with the eventual option of pilot samples plut genotypes with an MAF cutoff 0.01, SLURM may or may not be needed.
 
 ## URLs
 
