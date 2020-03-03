@@ -6,7 +6,7 @@ function pgz()
 # 1. extract all significant SNPs
 {
   ls plink2/*.gz | grep -v inv| \
-  sed 's|plink2/||g;s/-plink2//gs/.gz//g' | \
+  sed 's|plink2/||g;s/-plink2//g;s/.gz//g' | \
   parallel -j3 -C' ' '
   (
   # zcat plink2/{}.gz | head -1
