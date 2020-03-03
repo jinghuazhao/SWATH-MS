@@ -3,7 +3,7 @@
 export TMPDIR=$HPC_WORK/work
 export tag=_nold
 
-for p in $(ls sentinels/*${tag}.p | sed 's|sentinels/||g;s|'"$tag"'.p||g'); do
+for p in $(ls sentinels/*${tag}.p | sed 's|sentinels/||g;s|-plink2||g;s|'"$tag"'.p||g'); do
 
 echo $p
 export p=${p}
@@ -38,4 +38,4 @@ done
 (
   cat ${INF}/SWATH-MS/work/*sentinels | head -1
   for p in $(ls sentinels/*${tag}.p | sed 's|sentinels/||g;s|'"$tag"'.p||g'); do awk 'NR>1' ${INF}/SWATH-MS/work/${p}.sentinels; done
-) > INF1.merge
+) > swath-ms.merge
