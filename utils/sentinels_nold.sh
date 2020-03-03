@@ -23,7 +23,7 @@ function pgz()
 function _HLA()
 # 2. handling HLA
 {
-  for p in $(ls plink2/*.gz | sed 's|plink2/||g;s/-plink2//gs/.gz//g')
+  for p in $(ls plink2/*.gz | sed 's|plink2/||g;s/-plink2//g;s/.gz//g')
   do
     (
       zcat plink2/${p}.gz | head -1 | awk -vOFS="\t" '{$1="Chrom";$2="Start" "\t" "End";print}'
