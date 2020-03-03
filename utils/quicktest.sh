@@ -4,7 +4,7 @@ export TMPDIR=/rds/user/$USER/hpc-work/
 
 seq 609 | \
 parallel -C' ' '
-  export col=$(cut -d' ' -f {} swath-ms.uniprot)
+  export col=$(cut -d" " -f {} swath-ms.uniprot)
   quicktest --geno swath-ms.01.bgen --pheno swath-ms.sample --snptest --bgen \
             --npheno ${col} --ncovar sex --ncovar age --ncovar bmi \
             --ncovar PC1 --ncovar PC2 --ncovar PC3 --ncovar PC4 --ncovar PC5  \
