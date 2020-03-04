@@ -26,15 +26,19 @@ function _HLA()
   for p in $(ls bgen/*.gz | grep -v inv | sed 's|bgen/||g;s/-plink2//g;s/.gz//g')
   do
     (
-      zcat bgen/${p}.gz | head -1 | awk -vOFS="\t" '{$1="Chrom";$2="Start" "\t" "End";print}'
-      zcat sentinels/${p}.p.gz | \
-      awk -vOFS="\t" '{$1="chr" $1; start=$2-1;$2=start "\t" $2;print}' | \
-      awk '!($1 == "chr6" && $3 >= 25392021 && $3 < 33392022)'
-      zcat sentinels/${p}.p.gz | \
-      awk -vOFS="\t" '{$1="chr" $1; start=$2-1;$2=start "\t" $2;print}' | \
-      awk '$1 == "chr6" && $3 >= 25392021 && $3 < 33392022' | \
-      sort -k13,13g | \
-      awk 'NR==1'
+      zcat bgen/${p}-plink2.gz | head -1 | awk -vOFS="\t" '{$1="Chrom";$2="Start" "\t" "End";print}'
+      (
+        zcat sentinels/${p}.p.gz | \
+        awk -vOFS="\t" '{start=$2-1;$2=start "\t" $2};1' | \
+        awk '!($1 == "6" && $3 >= 25392021 && $3 < 33392022)'
+        zcat sentinels/${p}.p.gz | \
+        awk -vOFS="\t" '{start=$2-1;$2=start "\t" $2};1' | \
+        awk '$1 == "6" && $3 >= 25392021 && $3 < 33392022' | \
+        sort -k13,13g | \
+        awk 'NR==1'
+      ) | \
+      sort -k1,1n -k2,2n -k3,3n | \
+      awk -v OFS="\t" '{$1="chr" $1};1'
     ) > sentinels/${p}${tag}.p
     export lines=$(wc -l sentinels/${p}${tag}.p | cut -d' ' -f1)
     if [ $lines -eq 1 ]; then

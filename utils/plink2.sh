@@ -7,7 +7,7 @@ module load plink/2.00-alpha
 seq 609 | \
 parallel -C' ' '
   export col=$(cut -d" " -f {} swath-ms.uniprot); \
-  for v in ${col} ${col}_inv;
+  for v in ${col} ${col}_invn;
   do
       echo ${v}
       plink2 \
@@ -15,16 +15,16 @@ parallel -C' ' '
              --glm hide-covar --input-missing-phenotype -9 --covar-variance-standardize \
              --pheno swath-ms.pheno --pheno-name ${v} --covar swath-ms.covar \
              --out work/${v}
-      grep -v NA work/${v}.${col}.glm.linear | \
+      grep -v NA work/${v}.${v}.glm.linear | \
       gzip -f > plink2/${v}-plink2.gz
-      rm work/${v}.${col}.glm.linear
+      rm work/${v}.${v}.glm.linear
   done
 '
 
 seq 609 | \
 parallel -C' ' '
   export col=$(cut -d" " -f {} swath-ms.uniprot); \
-  for v in ${col} ${col}_inv;
+  for v in ${col} ${col}_invn;
   do
       echo ${v}
       plink2 \
@@ -32,9 +32,9 @@ parallel -C' ' '
              --glm hide-covar --input-missing-phenotype -9 --covar-variance-standardize \
              --pheno swath-ms.pheno --pheno-name ${v} --covar swath-ms.covar \
              --out work/${v}
-      grep -v NA work/${v}.${col}.glm.linear | \
+      grep -v NA work/${v}.${v}.glm.linear | \
       gzip -f > bgen/${v}-plink2.gz
-      rm work/${v}.${col}.glm.linear
+      rm work/${v}.${v}.glm.linear
   done
 '
 
