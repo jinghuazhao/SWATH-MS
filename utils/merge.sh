@@ -31,7 +31,7 @@ export p=${p}
     BP=chrpos[2]
     print $0,CHR,POS,SNP,BP
   }'
-) > ${INF}/SWATH-MS/work/${p}.sentinels
+) | uniq > ${INF}/SWATH-MS/work/${p}.sentinels
 
 done
 
@@ -39,3 +39,12 @@ done
   cat ${INF}/SWATH-MS/work/*sentinels | head -1
   for p in $(ls sentinels/*${tag}.p | sed 's|sentinels/||g;s|'"$tag"'.p||g'); do awk 'NR>1' ${INF}/SWATH-MS/work/${p}.sentinels; done
 ) > swath-ms.merge
+
+R --no-save <<END
+  merge <- read.delim("swath-ms.merge",as.is=TRUE)
+  m <- subset(merge,SNP!=".")
+  write.table(m[,1:6],file="swath-ms.sentinels",row.names=FALSE,quote=FALSE)
+END
+
+cut -d' ' -f5 swath-ms.sentinels | sed '1d' | sort | uniq > swath-ms.sentinels.prot
+gunzip -c hgTables.gz | awk 'length($1)<=5' | grep -f swath-ms.sentinels.prot -
