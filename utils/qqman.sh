@@ -11,7 +11,7 @@ parallel -C' ' '
   R --slave --vanilla --args \
     input_data_path=${uniprot}.txt \
     output_data_rootname=${uniprot}_qq \
-    plot_title="${uniprot[$i]} (${protein}) example" < turboqq.r
+    plot_title="${uniprot[$i]} (${protein})" < turboqq.r
 
   R --slave --vanilla --args \
     input_data_path=${uniprot}.txt \
@@ -19,5 +19,7 @@ parallel -C' ' '
     custom_peak_annotation_file_path=annotate.txt \
     reference_file_path=turboman_hg19_reference_data.rda \
     pvalue_sign=8.210181e-12 \
-    plot_title="${uniprot} (${protein}) example" < turboman.r
+    plot_title="${uniprot} (${protein})" < turboman.r
+
+  rm ${uniprot}.txt
 '
