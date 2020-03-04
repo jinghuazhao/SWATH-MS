@@ -15,6 +15,7 @@
     * QUICKTEST is faster than SNPTEST and takes into account uncertainty, and is therefore more preferable.
     * SNPTEST gives verbose screen output with -printids.
 * [swath-ms.ipynb](swath-ms.ipynb) is a Jupyter notebook calling tensorQTL -- it is not entirely ready due to missing information.
+* [utils/sentinels_nold.sh](utils/sentinels_nold.sh) and [utils/merge.sh](utils/merge.sh) performs sentinel selection.
 
 Therefore with the eventual option of pilot samples plut genotypes with an MAF cutoff 0.01, SLURM may or may not be needed.
 
