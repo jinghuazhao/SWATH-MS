@@ -3,8 +3,6 @@
 uniprot <- Sys.getenv("uniprot");
 print(uniprot);
 gz <- gzfile(paste0("bgen/",uniprot,"-plink2.gz"));
-R_LIBS <- Sys.getenv("R_LIBS")
-.libPaths(R_LIBS)
 require(qqman);
 tbl <- read.delim(gz,as.is=TRUE);
 tbl <- within(tbl,{
