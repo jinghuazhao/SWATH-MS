@@ -1,4 +1,4 @@
-# 3-3-2020 JHZ
+# 4-3-2020 JHZ
 
 export TMPDIR=$HPC_WORK/work
 export tag=_nold
