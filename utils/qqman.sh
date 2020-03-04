@@ -28,3 +28,4 @@ parallel -j1 -C' ' '
 '
 
 cat qqman.list | parallel -j1 -C' ' 'export uniprot={1};R --no-save < utils/qqman.R'
+cat qqman.list | parallel -j1 -C' ' 'export uniprot={1}_invn;R --no-save < utils/qqman.R'
