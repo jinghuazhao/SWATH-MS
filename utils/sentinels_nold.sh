@@ -1,16 +1,16 @@
-# 3-3-2020 JHZ
+# 4-3-2020 JHZ
 
 export tag=_nold
 
 function pgz()
 # 1. extract all significant SNPs
 {
-  ls plink2/*.gz | grep -v inv| \
-  sed 's|plink2/||g;s/-plink2//g;s/.gz//g' | \
+  ls bgen/*.gz | grep -v inv| \
+  sed 's|bgen/||g;s/-plink2//g;s/.gz//g' | \
   parallel -j3 -C' ' '
   (
-  # zcat plink2/{}-plink2.gz | head -1
-    zcat plink2/{}-plink2.gz | awk "
+  # zcat bgen/{}-plink2.gz | head -1
+    zcat bgen/{}-plink2.gz | awk "
     function abs(x)
     {
       if (x<0) return -x;
@@ -23,10 +23,10 @@ function pgz()
 function _HLA()
 # 2. handling HLA
 {
-  for p in $(ls plink2/*.gz | sed 's|plink2/||g;s/-plink2//g;s/.gz//g')
+  for p in $(ls bgen/*.gz | sed 's|bgen/||g;s/-plink2//g;s/.gz//g')
   do
     (
-      zcat plink2/${p}.gz | head -1 | awk -vOFS="\t" '{$1="Chrom";$2="Start" "\t" "End";print}'
+      zcat bgen/${p}.gz | head -1 | awk -vOFS="\t" '{$1="Chrom";$2="Start" "\t" "End";print}'
       zcat sentinels/${p}.p.gz | \
       awk -vOFS="\t" '{$1="chr" $1; start=$2-1;$2=start "\t" $2;print}' | \
       awk '!($1 == "chr6" && $3 >= 25392021 && $3 < 33392022)'
