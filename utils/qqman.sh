@@ -1,7 +1,7 @@
 # 4-3-2020 JHZ
 
-export uniprot=P08195
-export protein=4F2
+export uniprot=P06727
+export protein=APOA4
 gunzip -c bgen/${uniprot}-plink2.gz | cut -f1,2,12 --output-delimiter=' ' > ${protein}.txt
 
 R --slave --vanilla --args \
@@ -17,4 +17,6 @@ R --slave --vanilla --args \
   plot_title="${protein} example" < turboman.r
 
 
-# P04004 -  VTN
+# P04004 VTN
+# P06727 APOA4
+# P08195 4F2
