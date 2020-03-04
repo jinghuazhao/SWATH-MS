@@ -17,5 +17,5 @@ qq(with(tbl,P))
 dev.off()
 manhattan <- paste0(uniprot,"_manhattan.png");
 png(manhattan,width=12,height=10,units="in",pointsize=4,res=300)
-manhattan(tbl,main=uniprot,genomewideline=-log10(5e-10),suggestiveline=FALSE,ylim=c(0,25));
+manhattan(tbl,main=uniprot,genomewideline=-log10(8.210181e-12),suggestiveline=FALSE,ylim=c(0,25));
 dev.off();
