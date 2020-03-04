@@ -26,3 +26,5 @@ parallel -j1 -C' ' '
     rm ${v}.txt
   done
 '
+
+cat qqman.list | parallel -j1 -C' ' 'export uniprot={1};R --no-save < utils/qqman.R'
