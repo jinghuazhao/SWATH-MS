@@ -13,7 +13,7 @@ parallel -C' ' '
       plink2 \
              --bfile swath-ms.01 --fam swath-ms.fam \
              --glm hide-covar --input-missing-phenotype -9 --covar-variance-standardize \
-             --pheno swath-ms.pheno --pheno-name ${col} --covar swath-ms.covar \
+             --pheno swath-ms.pheno --pheno-name ${v} --covar swath-ms.covar \
              --out work/${v}
       grep -v NA work/${v}.${col}.glm.linear | \
       gzip -f > plink2/${v}-plink2.gz
@@ -30,7 +30,7 @@ parallel -C' ' '
       plink2 \
              --bgen swath-ms.01.bgen --sample swath-ms.sample \
              --glm hide-covar --input-missing-phenotype -9 --covar-variance-standardize \
-             --pheno swath-ms.pheno --pheno-name ${col} --covar swath-ms.covar \
+             --pheno swath-ms.pheno --pheno-name ${v} --covar swath-ms.covar \
              --out work/${v}
       grep -v NA work/${v}.${col}.glm.linear | \
       gzip -f > bgen/${v}-plink2.gz
