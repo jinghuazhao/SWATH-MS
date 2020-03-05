@@ -16,3 +16,6 @@ parallel -C' ' '
   gzip -f > quicktest/${col}-qt.gz
   rm work/${col}-qt
 '
+
+# _invn version:
+# export col=$(cut -d" " -f {} swath-ms.uniprot)_invn
