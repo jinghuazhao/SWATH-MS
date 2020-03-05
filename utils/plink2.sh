@@ -4,6 +4,8 @@ export TMPDIR=/rds/user/$USER/hpc-work/
 
 module load plink/2.00-alpha
 
+function binary_ped()
+{
 seq 609 | \
 parallel -C' ' '
   export col=$(cut -d" " -f {} swath-ms.uniprot); \
@@ -20,7 +22,10 @@ parallel -C' ' '
       rm work/${v}.${v}.glm.linear
   done
 '
+}
 
+function bgen()
+{
 seq 609 | \
 parallel -C' ' '
   export col=$(cut -d" " -f {} swath-ms.uniprot); \
@@ -37,4 +42,6 @@ parallel -C' ' '
       rm work/${v}.${v}.glm.linear
   done
 '
+}
 
+bgen

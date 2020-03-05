@@ -1,9 +1,9 @@
-# 4-3-2020 JHZ
+# 5-3-2020 JHZ
 
 export TMPDIR=$HPC_WORK/work
 export tag=_nold
 
-for p in $(ls sentinels/*${tag}.p | sed 's|sentinels/||g;s|-plink2||g;s|'"$tag"'.p||g'); do
+for p in $(ls sentinels/*${tag}.p | sed 's|sentinels/||g;s|'"$tag"'.p||g'); do
 
 echo $p
 export p=${p}
@@ -38,12 +38,12 @@ done
 (
   cat ${INF}/SWATH-MS/work/*sentinels | head -1
   for p in $(ls sentinels/*${tag}.p | sed 's|sentinels/||g;s|'"$tag"'.p||g'); do awk 'NR>1' ${INF}/SWATH-MS/work/${p}.sentinels; done
-) > swath-ms.merge
+) > swath-ms-invn.merge
 
 R --no-save <<END
   merge <- read.delim("swath-ms.merge",as.is=TRUE)
   m <- subset(merge,SNP!=".")
-  write.table(m[,1:6],file="swath-ms.sentinels",row.names=FALSE,quote=FALSE)
+  write.table(m[,1:6],file="swath-ms-invn.sentinels",row.names=FALSE,quote=FALSE)
 END
 
 cut -d' ' -f5 swath-ms.sentinels | sed '1d' | sort | uniq > swath-ms.sentinels.prot
