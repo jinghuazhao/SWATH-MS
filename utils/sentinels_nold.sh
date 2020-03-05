@@ -1,11 +1,11 @@
-# 4-3-2020 JHZ
+# 5-3-2020 JHZ
 
 export tag=_nold
 
 function pgz()
 # 1. extract all significant SNPs
 {
-  ls bgen/*.gz | grep -v invn | \
+  ls bgen/*.gz | grep invn | \
   sed 's|bgen/||g;s/-plink2//g;s/.gz//g' | \
   parallel -j3 -C' ' '
   (
@@ -23,7 +23,7 @@ function pgz()
 function _HLA()
 # 2. handling HLA
 {
-  for p in $(ls bgen/*.gz | grep -v invn | sed 's|bgen/||g;s/-plink2//g;s/.gz//g')
+  for p in $(ls bgen/*.gz | grep invn | sed 's|bgen/||g;s/-plink2//g;s/.gz//g')
   do
     (
       zcat bgen/${p}-plink2.gz | head -1 | awk -vOFS="\t" '{$1="Chrom";$2="Start" "\t" "End";print}'
