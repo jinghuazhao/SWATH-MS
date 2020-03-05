@@ -1,4 +1,4 @@
-# 4-3-2020 JHZ
+# 5-3-2020 JHZ
 
 cat qqman.list | \
 parallel -j1 -C' ' '
@@ -26,6 +26,8 @@ parallel -j1 -C' ' '
     rm ${v}.txt
   done
 '
-
+# Feed to Tryggve
+# cat qqman.list | parallel --dry-run -C' ' 'get {1}_invn-plink2.gz'
+#
 cat qqman.list | parallel -j1 -C' ' 'export uniprot={1};R --no-save < utils/qqman.R'
 cat qqman.list | parallel -j1 -C' ' 'export uniprot={1}_invn;R --no-save < utils/qqman.R'
