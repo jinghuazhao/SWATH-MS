@@ -7,7 +7,6 @@
   * [utils/plink2.sb](utils/plink2.sb) is SLURM version of PLINK2.
   * [utils/plink2.sh](utils/plink2.sh) non-SLURM version of PLINK2.
   * [utils/check.R](utils/check.R) attempts to check for consistence with Caprion.
-  * Earlier scripts involve:
   * [utils/affymetrix.sh](utils/affymetrix.sh) performs the association analysis on specific protein-variant combinations.
   * [utils/pgwas.sh](utils/pgwas.sh) ([utils/pgwas.ini](utils/pgwas.ini)) conducts genomewide associations analyses on all proteins. Note that
     * BOLT-LMM took 24hr for one protein from all data (N=43,059) but failed to run on available genotypes and samples (N=196). It also uses 8-bit version of bgen (qctool -bgen-bits 8 and also the master genotype files).
