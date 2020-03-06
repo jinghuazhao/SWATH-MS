@@ -14,7 +14,7 @@ jupyter notebook --ip=127.0.0.1 --no-browser --port 8087
 firefox http://127.0.0.1:8087/?token=d991ea12ce42b216d3aacd3c573e95280b6cd30d4b4aeeed &
 
 export covariates_file=swath-ms.covariates.txt
-export prefix=swath-ms.sample
+export prefix=swath-ms
 
 ln -sf swath-ms.01.bed 1.bed
 awk -v OFS="\t" '{$1="chr" $1};1' > 1.bim
@@ -34,4 +34,3 @@ export expression_bed=swath-ms.expression.bed.gz
 python3 -m tensorqtl ${plink_prefix_path} ${expression_bed} ${prefix} \
     --covariates ${covariates_file} \
     --mode trans
-
