@@ -1,6 +1,6 @@
 # SWATH-MS work
 
-* [swath-ms.R](swath-ms.R) ([swath-ms.ini](swath-ms.ini)) performs data proceessing and exploratory analysis. From this, we have
+* [swath-ms.R](swath-ms.R) ([swath-ms.ini](swath-ms.ini)) and [swath-ms.sh](swath-ms.sh) perform data proceessing and exploratory analysis. From this, we have
   * [utils/qctool.sh](utils/qctool.sh) attempts to extract genotype/sample information into a single .bgen file gives way to [qctool.sb](utils/qctool.sb) for its speed.
   * [utils/quicktest.sb](utils/quicktest.sb) is SLURM version of QUICKTEST.
   * [utils/quicktest.sh](utils/quicktest.sh) is non-SLURM version of QUICKTEST.
