@@ -109,9 +109,9 @@ plot(mc, what = "BIC")
 dev.off()
 
 # correlation
-CRP_TRFE <- swath_protein[c("Internal.ID","P02741","P02787")]
+CRP_TRFE <- swath_protein[c("swathMS_id","P02741","P02787")]
 names(CRP_TRFE)[2:3] <- c("CRP","TRFE")
-j <- merge(swath_pheno,CRP_TRFE,by.x="swathMS_id",by.y="Internal.ID")
+j <- merge(swath_pheno,CRP_TRFE,by="swathMS_id")
 with(j,cor(CRP_bl,CRP,use="complete.obs"))
 with(j,cor(TRANSF_bl,TRFE,use="complete.obs"))
 jj <- merge(j,pheno_protein,by="caprion_id")
