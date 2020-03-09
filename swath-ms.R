@@ -25,10 +25,10 @@ prot <- swath_protein[,-1]
 
 mse_threshold <- 0.0006
 r <- ae_swath(prot,hidden.layers=c(800,150,400))
-idr <- cbind(swath_protein[c("Internal.ID","External.ID")],mse=rowSums(r)/ncol(prot))
+idr <- cbind(swath_protein[c("swathMS_id","Affymetrix_gwasQC_bl")],mse=rowSums(r)/ncol(prot))
 ord <- with(idr, order(mse,decreasing=TRUE))
 print(subset(idr[ord,],mse>mse_threshold),row.names=FALSE)
-excl <- with(subset(idr,mse>mse_threshold),External.ID)
+excl <- with(subset(idr,mse>mse_threshold),Affymetrix_gwasQC_bl)
 outliers <- rownames(prot)%in%excl
 pdf("ae.pdf")
 plot(idr[ord,3],cex=0.4)
