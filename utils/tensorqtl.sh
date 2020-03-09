@@ -34,3 +34,11 @@ export expression_bed=swath-ms.expression.bed.gz
 python3 -m tensorqtl ${plink_prefix_path} ${expression_bed} ${prefix} \
     --covariates ${covariates_file} \
     --mode trans
+
+R --no-save -q <<END
+  library(SparkR)
+  sparkR.session()
+  df <- read.parquet("swath-ms.trans_qtl_pairs.parquet")
+  head(df)
+END
+
