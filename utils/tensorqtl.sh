@@ -13,7 +13,7 @@ jupyter notebook --ip=127.0.0.1 --no-browser --port 8087
 # ssh -4 -L 8087:127.0.0.1:8087 -fN login-e-10.hpc.cam.ac.uk
 firefox http://127.0.0.1:8087/?token=d991ea12ce42b216d3aacd3c573e95280b6cd30d4b4aeeed &
 
-export covariates_file=swath-ms.covariates.txt
+export covariates_file=1.covariates.txt
 export prefix=swath-ms
 
 ln -sf swath-ms.01.bed 1.bed
