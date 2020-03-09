@@ -1,4 +1,4 @@
-# 6-3-2020 JHZ
+# 9-3-2020 JHZ
 
 # recycle tensorQTL venv
 # ln -s $HOME/tensorqtl/venv
@@ -17,7 +17,7 @@ export covariates_file=swath-ms.covariates.txt
 export prefix=swath-ms
 
 ln -sf swath-ms.01.bed 1.bed
-awk -v OFS="\t" '{$1="chr" $1};1' > 1.bim
+awk -v OFS="\t" '{$1="chr" $1};1' swath-ms.01.bim > 1.bim
 ln -sf swath-ms.01.fam 1.fam
 gunzip -c swath-ms.expression.bed.gz | grep -v chrX | gzip -f > 1.expression.bed.gz
 
