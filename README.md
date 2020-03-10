@@ -21,7 +21,7 @@ Therefore with the eventual option of pilot samples plut genotypes with an MAF c
 ## References
 
 Ludwig C, Gillet L, Rosenberger G, Amon S, Collins BC, Aebersold R (2018). Data‐independent acquisition‐based SWATH‐MS for quantitative proteomics: 
-a tutorial. Mol Syst Biol 14:e8126https://doi.org/10.15252/msb.20178126.
+a tutorial. Mol Syst Biol 14:e8126, https://doi.org/10.15252/msb.20178126.
 
 [OpenSWATH](http://openswath.org/en/latest/),
 [ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.dat.gz](ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.dat.gz).
