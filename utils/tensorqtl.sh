@@ -43,6 +43,6 @@ R --no-save -q <<END
   library(SparkR)
   sparkR.session()
   df <- read.parquet("swath-ms.trans_qtl_pairs.parquet")
-  head(df)
+  write.table(df,file="swath-ms.trans_qtl_pairs.txt",row.names=FALSE,quote=FALSE,sep="\t")
 END
 
