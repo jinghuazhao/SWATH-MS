@@ -1,4 +1,4 @@
-# 9-4-2020 JHZ
+# 10-3-2020 JHZ
 
 cwd <- getwd()
 Caprion <- paste(Sys.getenv("INF"),"Caprion",sep="/")
@@ -16,7 +16,8 @@ affymetrix("pgwas")
 
 swath_overlap()
 load("swath-ms-overlap.rda")
-prot <- swath_protein[,-1]
+prot <- swath_protein[,-(1:2)]
+names(prot) <- swath_protein[,1]
 
 # Outliers by AE
 # module load python/3.6
