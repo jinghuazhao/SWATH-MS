@@ -1,4 +1,4 @@
-# 9-3-2020 JHZ
+# 10-3-2020 JHZ
 
 # recycle tensorQTL venv
 # ln -s $HOME/tensorqtl/venv
@@ -27,6 +27,8 @@ export expression_bed=1.expression.bed.gz
 python3 -m tensorqtl ${plink_prefix_path} ${expression_bed} ${prefix} \
     --covariates ${covariates_file} \
     --mode cis
+
+gunzip -c swath-ms.cis_qtl.txt.gz | awk 'NR==1 || $NF<1e-3'
 
 export plink_prefix_path=swath-ms.01
 export expression_bed=swath-ms.expression.bed.gz
