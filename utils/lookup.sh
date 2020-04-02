@@ -3,9 +3,13 @@
 function check()
 {
   grep -H -w $1 swath-ms.merge
-  export prot=$(grep $1 swath-ms.merge | cut -f5 | sed 's/_invn//g')
-  grep -H -w ${prot} $INF/doc/hgTables.tsv
-  grep -H -w ${prot} ~/SomaLogic/doc/SOMALOGIC_Master_Table_160410_1129info.tsv
+  export prot=$(grep -w $1 swath-ms.merge | cut -f5 | sed 's/_invn//g')
+  if [ "${prot}" == "" ]; then
+    echo Empty
+  else
+    grep -H -w ${prot} $INF/doc/hgTables.tsv
+    grep -H -w ${prot} $HOME/SomaLogic/doc/SOMALOGIC_Master_Table_160410_1129info.tsv
+  fi
 }
 
 function Sun()

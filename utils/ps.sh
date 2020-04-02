@@ -1,23 +1,26 @@
 #!/usr/bin/bash
 
-module load ceuadmin/phenoscanner
-
 export rt="swath-ms-invn"
 cut -d' ' -f6 ${rt}.sentinels | sed '1d' | sort | uniq > ${rt}.snp
-split -l 500 --numeric-suffix ${rt}.snp ${rt}.snp.
-for i in `seq 0 4`
-do
-  echo ${rt}.snp.0${i}.pQTL
-  phenoscanner -s T -c pQTL -x EUR -p 0.0000001 --r2 0.6 -i ${rt}.snp.0${i} -o ${rt}.snp.0${i}.pQTL
-done
-(
+
+function ps()
+{
+  module load ceuadmin/phenoscanner
+  split -l 500 --numeric-suffix ${rt}.snp ${rt}.snp.
   for i in `seq 0 4`
   do
-    if [ $i -eq 0 ]; then
-       cat ${rt}.snp.0${i}.pQTL
-    else
-       sed '1d' ${rt}.snp.0${i}.pQTL
-    fi
-    rm ${rt}.snp.0${i}.pQTL
+    echo ${rt}.snp.0${i}.pQTL
+    phenoscanner -s T -c pQTL -x EUR -p 0.0000001 --r2 0.6 -i ${rt}.snp.0${i} -o ${rt}.snp.0${i}.pQTL
   done
-) > ${rt}.pQTL
+  (
+    for i in `seq 0 4`
+    do
+      if [ $i -eq 0 ]; then
+         cat ${rt}.snp.0${i}.pQTL
+      else
+         sed '1d' ${rt}.snp.0${i}.pQTL
+      fi
+      rm ${rt}.snp.0${i}.pQTL
+    done
+  ) > ${rt}.pQTL
+}
