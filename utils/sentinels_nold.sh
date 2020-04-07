@@ -1,4 +1,4 @@
-# 6-4-2020 JHZ
+# 7-4-2020 JHZ
 
 export tag=_nold
 
@@ -11,12 +11,7 @@ function pgz()
   (
   # zcat bgen/{}-plink2.gz | head -1
     zcat bgen/{}-plink2.gz | awk "
-    function abs(x)
-    {
-      if (x<0) return -x;
-      else return x;
-    }
-    NR>1 && abs(\$11)>=5" | sort -k1,1n -k2,2n
+    NR>1 && \$12 <=10^-5" | sort -k1,1n -k2,2n
   ) | gzip -f > sentinels/{}.p.gz'
 }
 
