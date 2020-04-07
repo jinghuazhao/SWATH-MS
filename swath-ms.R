@@ -1,4 +1,4 @@
-# 10-3-2020 JHZ
+# 6-4-2020 JHZ
 
 cwd <- getwd()
 Caprion <- paste(Sys.getenv("INF"),"Caprion",sep="/")
@@ -15,6 +15,10 @@ affymetrix("SomaLogic")
 affymetrix("pgwas")
 
 swath_overlap()
+protein_matrix[86:87,1:5]
+t1 <- t(protein_matrix[86,-1])
+t2 <- t(protein_matrix[87,-1])
+cor(t1,t2)
 load("swath-ms-overlap.rda")
 prot <- swath_protein[,-(1:2)]
 names(prot) <- swath_protein[,1]
