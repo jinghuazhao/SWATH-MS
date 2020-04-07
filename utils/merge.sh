@@ -38,7 +38,7 @@ done
 
 R --no-save -q <<END
   merge <- read.delim("swath-ms.merge",as.is=TRUE)
-  m <- subset(merge,SNP!=".")
+  m <- subset(merge,MarkerName!=".")
   write.table(m[,1:6],file="swath-ms-invn.sentinels",row.names=FALSE,quote=FALSE)
 END
 
