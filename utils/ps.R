@@ -1,6 +1,5 @@
-# 1-4-2020 JHZ
+# 10-4-2020 JHZ
 
-options(width=500)
 require(phenoscanner)
 catalogue <- "pQTL"
 rsid <- scan("swath-ms-invn.snp",what="")
@@ -14,8 +13,6 @@ for(i in 1:length(batches))
 }
 snps <- do.call(rbind,s)
 results <- do.call(rbind,t)
-r <- list(snps=snps,results=results)
-save(r,file=paste0("swath-ms-invn.",catalogue))
 results <- within(results,{
    a1 <- ref_a1
    a2 <- ref_a2
@@ -24,11 +21,24 @@ results <- within(results,{
    a2[swap] <- ref_a1[swap]
    ref_snpid <- paste0(ref_hg19_coordinates,"_",a1,"_",a2)
 })
+r <- list(snps=snps,results=results)
+save(r,file=paste0("swath-ms-invn.",catalogue))
+
+options(width=500)
+attach(r)
 for(d in unique(with(results,dataset)))
 {
   cat(d,"\n")
+  vars <- c("ref_rsid","ref_snpid","rsid","r2","p","trait","dataset","pmid")
+  s <- subset(results[vars],dataset==d)
+  if (d=="Sun-B_pQTL_EUR_2017")
+  {
+     gs <-read.delim("INTERVAL_box.tsv",as.is=TRUE)
+     m <- merge(s,gs,by.x="trait",by.y="TargetFullName")
+     s <- m[c("ref_rsid","ref_snpid","rsid","r2","p","trait","UniProt","UniProts","symbol")]
+  }
   sink(paste(catalogue,d,sep="."))
-  s <- subset(results[c("ref_rsid","ref_snpid","rsid","r2","p","trait","dataset","pmid")],dataset==d)
   print(s)
   sink()
 }
+detach(r)

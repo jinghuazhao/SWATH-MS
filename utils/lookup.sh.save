@@ -11,6 +11,31 @@ function check()
   fi
 }
 
+function Sun()
+{
+  cut -f5,6 swath-ms.merge | sed '1d;s/_invn//g' | \
+  parallel -C' ' '
+    echo --- ${rsid} ---
+    grep -w {1} pQTL.Sun-B_pQTL_EUR_2017 | grep -w {2}
+    if [ "${prot}" == "" ]; then
+      echo Empty
+    else
+      grep -H -w {1} $INF/doc/hgTables.tsv
+      grep -H -w {1} 
+
+
+
+
+
+
+
+
+
+INTERVAL-box.tsv
+    fi
+  '
+}
+
 function Folkersen()
 {
   grep $1 -H -w pQTL.Folkersen-L_Proteins_EUR_2017
@@ -27,16 +52,6 @@ function pQTL()
 {
   grep $1 -H -w pQTL.pQTL_2017
   check $1
-}
-
-function Sun()
-{
-  awk 'NR>1{gsub(/_invn/,"");print $5,$6}' swath-ms.merge | \
-  parallel -C' ' '
-    echo {1} {2}
-    grep -w {1} pQTL.Sun-B_pQTL_EUR_2017 | grep {2}
-    grep -H -w {1} INTERVAL_box.tsv
-  '
 }
 
 Sun
