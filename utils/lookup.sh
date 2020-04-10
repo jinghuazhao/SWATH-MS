@@ -40,3 +40,18 @@ function Sun()
 }
 
 Sun
+
+function Olink()
+{
+  export OLINK=/rds/project/jmmh2/rds-jmmh2-projects/olink_proteomics/scallop/jp549/olink-merged-output
+  ls $OLINK > olink.list
+  join -11 -22 \
+       <(awk 'NR>1{gsub(/_invn/,"");print $5,$6}' swath-ms.merge | sort -k1,1) \
+       <(ls $OLINK/*gz  | sed 's/___/ /g;s/_chr_merged.gz\*//g;s///g;s///g;s///g' | sort -k2,2) | \
+  parallel -C' ' '
+    echo {1} {2}
+    zgrep -H -w {2} {3}___{1}_chr_merged.gz
+  '
+}
+
+Olink
