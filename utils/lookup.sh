@@ -48,9 +48,17 @@ function Olink()
   join -11 -22 \
        <(awk 'NR>1{gsub(/_invn/,"");print $5,$6}' swath-ms.merge | sort -k1,1) \
        <(ls $OLINK/*gz  | sed 's/___/ /g;s/_chr_merged.gz\*//g;s///g;s///g;s///g' | sort -k2,2) | \
+  awk '{
+     gsub(/chr/,"",$2);
+     split($2,a,":");
+     chr=a[1];
+     pos=a[2];
+     print $1,pos,$3,chr
+  }' | \
   parallel -C' ' '
     echo {1} {2}
-    zgrep -H -w {2} {3}___{1}_chr_merged.gz
+    zgrep -H -w {2} {3}___{1}_chr_merged.gz | \
+    awk -vchr={4} "(\$3==chr)"
   '
 }
 
