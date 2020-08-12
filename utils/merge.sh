@@ -1,4 +1,4 @@
-# 2-4-2020 JHZ
+# 12-4-2020 JHZ
 
 export TMPDIR=$HPC_WORK/work
 export tag=_nold
@@ -35,6 +35,7 @@ done
   cat work/*sentinels | head -1
   for p in $(ls sentinels/*${tag}.p | sed 's|sentinels/||g;s|'"$tag"'.p||g'); do awk 'NR>1' work/${p}.sentinels; done
 ) > swath-ms.merge
+cut -f5 swath-ms.merge | sed '1d' | sort | uniq > swath-ms.merge.prot
 
 R --no-save -q <<END
   merge <- read.delim("swath-ms.merge",as.is=TRUE)

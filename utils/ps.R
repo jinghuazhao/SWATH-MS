@@ -2,7 +2,7 @@
 
 require(phenoscanner)
 catalogue <- "pQTL"
-rsid <- scan("swath-ms-invn.snp",what="")
+rsid <- scan("swath-ms-invn.snp.00",what="")
 batches <- split(rsid, ceiling(seq_along(rsid)/100))
 s <- t <- list()
 for(i in 1:length(batches))
@@ -22,7 +22,7 @@ results <- within(results,{
    ref_snpid <- paste0(ref_hg19_coordinates,"_",a1,"_",a2)
 })
 r <- list(snps=snps,results=results)
-save(r,file=paste0("swath-ms-invn.",catalogue))
+save(r,file=paste0("swath-ms-invn-00.",catalogue))
 
 options(width=500)
 attach(r)
