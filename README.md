@@ -1,5 +1,7 @@
 # SWATH-MS work
 
+Acronym of Sequential Window Acquisition of all Theoretical mass spectrometry (SWATH-MS) / data independent acquisition (DIA)
+
 * [swath-ms.R](swath-ms.R) ([swath-ms.ini](swath-ms.ini)) and [swath-ms.sh](swath-ms.sh) perform data proceessing and exploratory analysis. From this, we have
   * [utils/qctool.sh](utils/qctool.sh) attempts to extract genotype/sample information into a single .bgen file gives way to [qctool.sb](utils/qctool.sb) for its speed.
   * [utils/quicktest.sb](utils/quicktest.sb) is SLURM version of QUICKTEST.
